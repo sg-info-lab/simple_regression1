@@ -104,8 +104,8 @@ def main():
 
     # --- page選択ラジオボタン
     st.sidebar.markdown("## ページ切り替え")
-    st.session_state.page = st.sidebar.radio("ページ選択", ("単回帰分析", "データ可視化", "重回帰分析"))
-#     st.session_state.page = st.sidebar.radio("ページ選択", ("データ可視化", "単回帰分析"))
+    # st.session_state.page = st.sidebar.radio("ページ選択", ("単回帰分析", "データ可視化", "重回帰分析"))
+    st.session_state.page = st.sidebar.radio("ページ選択", ("単回帰分析", "データ可視化"))
 
     # --- page振り分け
     if st.session_state.page == "input_name":
@@ -116,9 +116,9 @@ def main():
     elif st.session_state.page == "単回帰分析":
         st.session_state.page = "lr"
         lr()
-    elif st.session_state.page == "重回帰分析":
-        st.session_state.page = "lr"
-        multi_lr()
+    # elif st.session_state.page == "重回帰分析":
+    #     st.session_state.page = "lr"
+    #     multi_lr()
 
 
 # ---------------- usernameの登録 ----------------------------------
@@ -263,20 +263,23 @@ def lr():
     st.title("単回帰分析による予測")
     df = load_full_data()
 
-    st.sidebar.markdown("## まずはタイプ 1から！")
+    # st.sidebar.markdown("## まずはタイプ 1から！")
 
-    # sidebar でグラフを選択
-    df_type = st.sidebar.radio("", ("タイプ 1", "タイプ 2", "タイプ 3"))
+    # # sidebar でグラフを選択
+    # df_type = st.sidebar.radio("", ("タイプ 1", "タイプ 2", "タイプ 3"))
 
-    # タイプ 1; フルデータ
-    if df_type == "タイプ 1":
-        filtered_df = load_num_data()
-    # タイプ 2: 女子のみのデータ
-    elif df_type == "タイプ 2":
-        filtered_df = d.load_filtered_data(df, "女子")
-    # タイプ 3: 高1女子のみのデータ
-    else:
-        filtered_df = d.load_filtered_data(df, "高1女子")
+    # # タイプ 1; フルデータ
+    # if df_type == "タイプ 1":
+    #     filtered_df = load_num_data()
+    # # タイプ 2: 女子のみのデータ
+    # elif df_type == "タイプ 2":
+    #     filtered_df = d.load_filtered_data(df, "女子")
+    # # タイプ 3: 高1女子のみのデータ
+    # else:
+    #     filtered_df = d.load_filtered_data(df, "高1女子")
+
+
+    filtered_df = load_num_data()
 
     # 変数を取得してから、回帰したい
     with st.form("get_lr_data"):
@@ -343,115 +346,116 @@ def multi_lr():
     st.title("重回帰分析による予測")
     df = load_full_data()
 
-    st.sidebar.markdown("## まずはタイプ 1から！")
+    # st.sidebar.markdown("## まずはタイプ 1から！")
 
-    # sidebar でグラフを選択
-    df_type = st.sidebar.radio("", ("タイプ 1", "タイプ 2", "タイプ 3"))
+    # # sidebar でグラフを選択
+    # df_type = st.sidebar.radio("", ("タイプ 1", "タイプ 2", "タイプ 3"))
 
-    # タイプ 1; フルデータ
-    if df_type == "タイプ 1":
-        filtered_df = load_num_data()
-    # タイプ 2: 女子のみのデータ
-    elif df_type == "タイプ 2":
-        filtered_df = d.load_filtered_data(df, "女子")
-    # タイプ 3: 高1女子のみのデータ
-    else:
-        filtered_df = d.load_filtered_data(df, "高1女子")
+    # # タイプ 1; フルデータ
+    # if df_type == "タイプ 1":
+    #     filtered_df = load_num_data()
+    # # タイプ 2: 女子のみのデータ
+    # elif df_type == "タイプ 2":
+    #     filtered_df = d.load_filtered_data(df, "女子")
+    # # タイプ 3: 高1女子のみのデータ
+    # else:
+    #     filtered_df = d.load_filtered_data(df, "高1女子")
 
-    # 変数を取得してから、回帰したい
-    with st.form("get_lr_data"):
-        y_label = st.selectbox("予測したい変数(目的変数)", X_COLS)
-        x_labels = st.multiselect("予測に使いたい変数(説明変数)", X_COLS)
+    # filtered_df = load_num_data()
+    # # 変数を取得してから、回帰したい
+    # with st.form("get_lr_data"):
+    #     y_label = st.selectbox("予測したい変数(目的変数)", X_COLS)
+    #     x_labels = st.multiselect("予測に使いたい変数(説明変数)", X_COLS)
 
-        # trainとtestをsplit
-        df_train = pd.concat(
-            [
-                filtered_df[filtered_df.no < TEST_START_INDEX],
-                filtered_df[filtered_df.no > TEST_END_INDEX],
-            ]
-        )
-        df_test = pd.concat(
-            [
-                filtered_df[TEST_START_INDEX <= filtered_df.no],
-                filtered_df[filtered_df.no <= TEST_END_INDEX],
-            ]
-        )
+    #     # trainとtestをsplit
+    #     df_train = pd.concat(
+    #         [
+    #             filtered_df[filtered_df.no < TEST_START_INDEX],
+    #             filtered_df[filtered_df.no > TEST_END_INDEX],
+    #         ]
+    #     )
+    #     df_test = pd.concat(
+    #         [
+    #             filtered_df[TEST_START_INDEX <= filtered_df.no],
+    #             filtered_df[filtered_df.no <= TEST_END_INDEX],
+    #         ]
+    #     )
 
-        y_train = df_train[[y_label]]
-        y_test = df_test[[y_label]]
-        X_train = df_train[x_labels]
-        X_test = df_test[x_labels]
+    #     y_train = df_train[[y_label]]
+    #     y_test = df_test[[y_label]]
+    #     X_train = df_train[x_labels]
+    #     X_test = df_test[x_labels]
 
-        submitted_multi = st.form_submit_button("重回帰分析スタート")
+    #     submitted_multi = st.form_submit_button("重回帰分析スタート")
 
-        if submitted_multi:
-            ## エラー対応
-            if len(x_labels) == 0:
-                st.markdown("### 予測に使いたい変数を1つ以上選んでください！")
+    #     if submitted_multi:
+    #         ## エラー対応
+    #         if len(x_labels) == 0:
+    #             st.markdown("### 予測に使いたい変数を1つ以上選んでください！")
 
-            else:
-                # モデルの構築
-                model_lr = LinearRegression()
-                model_lr.fit(X_train, y_train)
-                y_pred = model_lr.predict(X_test)
+    #         else:
+    #             # モデルの構築
+    #             model_lr = LinearRegression()
+    #             model_lr.fit(X_train, y_train)
+    #             y_pred = model_lr.predict(X_test)
 
-                # ログを記録
-                add_row_to_gsheet(
-                    gsheet_connector,
-                    [
-                        [
-                            datetime.datetime.now(
-                                datetime.timezone(datetime.timedelta(hours=9))
-                            ).strftime("%Y-%m-%d %H:%M:%S"),
-                             st.session_state.username,
-                            "重回帰分析",
-                            y_label,
-                            "_".join(x_labels),
-                            "-",
-                        ]
-                    ],
-                )
+    #             # ログを記録
+    #             add_row_to_gsheet(
+    #                 gsheet_connector,
+    #                 [
+    #                     [
+    #                         datetime.datetime.now(
+    #                             datetime.timezone(datetime.timedelta(hours=9))
+    #                         ).strftime("%Y-%m-%d %H:%M:%S"),
+    #                          st.session_state.username,
+    #                         "重回帰分析",
+    #                         y_label,
+    #                         "_".join(x_labels),
+    #                         "-",
+    #                     ]
+    #                 ],
+    #             )
 
-                # 結果の表示
-                coef = model_lr.coef_[0]
-                intercept = model_lr.intercept_[0]
+    #             # 結果の表示
+    #             coef = model_lr.coef_[0]
+    #             intercept = model_lr.intercept_[0]
 
-                ans = "##### " + y_label + " = "
-                for c, label in zip(coef, x_labels):
-                    ans += " **{:.2f}** x **{}の値** +".format(c, label)
+    #             ans = "##### " + y_label + " = "
+    #             for c, label in zip(coef, x_labels):
+    #                 ans += " **{:.2f}** x **{}の値** +".format(c, label)
 
-                # 切片を追記
-                if intercept > 0:
-                    ans += str(round(intercept, 3))
-                else:
-                    ans = ans[:-1] + "- " + str(round(abs(intercept), 3))
-                st.markdown(ans)
+    #             # 切片を追記
+    #             if intercept > 0:
+    #                 ans += str(round(intercept, 3))
+    #             else:
+    #                 ans = ans[:-1] + "- " + str(round(abs(intercept), 3))
+    #             st.markdown(ans)
 
-                st.markdown("花子の他の測定値は以下の通り")
-                st.table(target_df)
+    #             st.markdown("花子の他の測定値は以下の通り")
+    #             st.table(target_df)
 
-                st.markdown("上記の式に、データを当てはめると....")
+    #             st.markdown("上記の式に、データを当てはめると....")
 
-                pred_str = "##### " + y_label + " = "
-                pred_ans = 0
-                for c, label in zip(coef, x_labels):
-                    pred_str += " **{:.2f}** x **{}** +".format(
-                        c, target_df.at[0, label]
-                    )
-                    pred_ans += round(c, 3) * target_df.at[0, label]
+    #             pred_str = "##### " + y_label + " = "
+    #             pred_ans = 0
+    #             for c, label in zip(coef, x_labels):
+    #                 pred_str += " **{:.2f}** x **{}** +".format(
+    #                     c, target_df.at[0, label]
+    #                 )
+    #                 pred_ans += round(c, 3) * target_df.at[0, label]
 
-                # 切片を追記
-                if intercept > 0:
-                    pred_str += str(round(intercept, 3))
-                else:
-                    pred_str = pred_str[:-1] + "- " + str(round(abs(intercept), 3))
+    #             # 切片を追記
+    #             if intercept > 0:
+    #                 pred_str += str(round(intercept, 3))
+    #             else:
+    #                 pred_str = pred_str[:-1] + "- " + str(round(abs(intercept), 3))
 
-                pred_ans += round(intercept, 3)
+    #             pred_ans += round(intercept, 3)
 
-                st.markdown(pred_str)
-                st.success("予測結果：" + str(round(pred_ans, 3)))
+    #             st.markdown(pred_str)
+    #             st.success("予測結果：" + str(round(pred_ans, 3)))
 
-                st.write("※ 決定係数： " + str(round(model_lr.score(X_train, y_train), 3)))
+    #             st.write("※ 決定係数： " + str(round(model_lr.score(X_train, y_train), 3)))
 
                 # グラフの描画
                 # plot_y = list(map(lambda y: y[0], y_pred))
