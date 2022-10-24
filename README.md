@@ -15,3 +15,12 @@
 
 # Note
 - Without Internet, this app cannot connect sheets and show error. 
+
+
+# Data
+太郎のデータ
+
+> target_df = pd.DataFrame(
+    [ [170.5, 59.5, 87.6, 40, 38, 65, 61, 117, 6.5, 0.0, 36] ], columns=X_COLS
+    )
+
